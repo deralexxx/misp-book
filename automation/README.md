@@ -2,15 +2,15 @@
 
 #  Automation API
 
-Automation functionality is designed to automatically generate signatures for intrusion detection systems. To enable signature generation for a given attribute, Signature field of this attribute must be set to Yes. Note that not all attribute types are applicable for signature generation, currently we only support NIDS signature generation for IP, domains, host names, user agents etc., and hash list generation for MD5/SHA1 values of file artifacts. Support for more attribute types is planned. To to make this functionality available for automated tools an authentication key is used. This makes it easier for your tools to access the data without further form-based-authentication.
+Automation functionality is designed to automatically generate signatures for intrusion detection systems. To enable signature generation for a given attribute, Signature field of this attribute must be set to Yes. Note that not all attribute types are applicable for signature generation, currently we only support NIDS signature generation for IP, domains, host names, user agents etc., and hash list generation for MD5/SHA1 values of file artefacts. Support for more attribute types is planned. To to make this functionality available for automated tools an authentication key is used. This makes it easier for your tools to access the data without further form-based-authentication.
 
 ## General
 
 ### Automation URL
 
-The documentation will include a default MISP url in the examples. Don't forget to replace it with your MISP url.
+The documentation will include a default MISP URL in the examples. Don't forget to replace it with your MISP URL.
 
-Default MISP url in the documentation:
+Default MISP URL in the documentation:
 
 ~~~~
 https://<misp url>/
@@ -20,14 +20,13 @@ https://<misp url>/
 
 The authentication of the automation is performed via a secure key available in the MISP UI interface. Make sure you keep that key secret as it gives access to the entire database! The API key is available in the event actions menu under automation.
 
-Since version 2.2 the usage of the authentication key in the url is deprecated. Instead, pass the auth key in an Authorization header in the request. The legacy option of having the auth key in the url is temporarily still supported but not recommended.
+Since version 2.2 the usage of the authentication key in the URL is deprecated. Instead, pass the auth key in an Authorization header in the request. The legacy option of having the auth key in the URL is temporarily still supported but not recommended.
 
 The authorization is performed by using the following header:
 
 ~~~~
 Authorization: YOUR API KEY
 ~~~~
-
 ### Accept and Content-Type headers
 
 When performing your request, depending on the type of request, you might need to explicitly specify in what content type you want to get your results. This is done by setting one of the below Accept headers:
@@ -60,10 +59,9 @@ PyMISP allows you to fetch events, add or update events/attributes, add or updat
 
 [PyMISP is available](https://github.com/MISP/PyMISP) including a documentation with various examples.
 
-
 ## Status Codes
 
-To be done
+TODO
 
 - 50x
 
@@ -76,25 +74,14 @@ To be done
 #### Example
 
 ~~~~
-curl --header "Authorization: a4PLf8QICdDdOmFjwdtSYqkCqn9CvN0VQt7mpUUf " --header "Accept: application/json" --header "Content-Type: application/json" http://10.50.13.60/servers/gaaa
+curl --header "Authorization: YOUR API KEY " --header "Accept: application/json" --header "Content-Type: application/json" https://<misp url>/servers/gaaa
 ~~~~
 
 ~~~~json
 {"name":"Not Found","message":"Not Found","url":"\/servers\/gaaa"}
 ~~~~
 
-## Events management
-
-### /events
-
-#### Accepted Methods
-
-- GET
-- POST
-- PUT
-- DELETE
-
-#### Description
+## Events management /events
 
 Receive, update or delete Events. There is also a good amount of special output formats that can be triggered.
 
@@ -123,10 +110,16 @@ curl --header "Authorization: YOUR API KEY" --header "Accept: application/json" 
 
 ### POST /events
 
+Will post an event to MISP.
+
+#### Arguments
+
+TODO
+
 #### Example
 
 ~~~~
-curl -i -H "Accept: application/json" -H "content-type: application/json" -H "Authorization: a4PLf8QICdDdOmFjwdtSYqkCqn9CvN0VQt7mpUUf" --data "@event.json" -X POST http://10.50.13.60/events
+curl -i -H "Accept: application/json" -H "content-type: application/json" -H "Authorization: YOUR API KEY" --data "@event.json" -X POST https://<misp url>/events
 ~~~~
 
 ### DELETE /events
@@ -140,7 +133,6 @@ Delete events based on criteria
 - event_id: Event id to receive
 - event_uuid : Event uuid to receive
 
-
 #### Output
 ~~~~json
 {
@@ -152,10 +144,11 @@ Delete events based on criteria
 
 #### Example
 
-
+~~~~
 curl --header "Authorization: YOUR API KEY" --header "Accept: application/json" --header "Content-Type: application/json" https://<misp url>/
 ~~~~
-curl --header "Authorization: a4PLf8QICdDdOmFjwdtSYqkCqn9CvN0VQt7mpUUf " --header "Accept: application/json" --header "Content-Type: application/json" -X "DELETE" http://10.50.13.60/events/1
+~~~~
+curl --header "Authorization: YOUR API KEY " --header "Accept: application/json" --header "Content-Type: application/json" -X "DELETE" https://<misp url>/events/1
 ~~~~
 
 ### GET /events/index
@@ -172,11 +165,10 @@ Return the event index. - Warning, there's a limit on the number of results
 #### Example
 
 ~~~~
-curl --header "Authorization: a4PLf8QICdDdOmFjwdtSYqkCqn9CvN0VQt7mpUUf " --header "Accept: application/json" --header "Content-Type: application/json" http://10.50.13.60/events/index
+curl --header "Authorization: YOUR API KEY " --header "Accept: application/json" --header "Content-Type: application/json" https://<misp url>/events/index
 ~~~~
 
-
-### POST /events/addTag Add or remove tags from events
+### POST /events/addTag Add tag from event
 
 You can add or remove an existing tag from an event in the following way:
 
@@ -197,6 +189,25 @@ Where "tag" is the ID of the tag. You can also use the name of the tag the follo
 {"request": {"Event": {"id": "228", "tag": "OSINT"}}}
 ~~~~
 
+### POST /events/removeTag remove tag from event
+
+You remove an existing tag from an event in the following way:
+
+~~~~
+https://<misp url>/events/removeTag
+~~~~
+
+Just POST a JSON object in the following format (to the appropriate API depending on whether you want to add or delete a tag from an event):
+
+~~~~json
+{"request": {"Event": {"id": "228", "tag": "8"}}}
+~~~~
+
+Where "tag" is the ID of the tag. You can also use the name of the tag the following way (has to be an exact match):
+
+~~~~json
+{"request": {"Event": {"id": "228", "tag": "OSINT"}}}
+~~~~
 
 ### GET /events/pushEventToZMQ/
 
@@ -331,7 +342,7 @@ Usage of the API:
 https://<misp url>/events/stix/download
 ~~~~
 
-Search parameters can be passed to the function via url parameters or by POSTing an xml or json object (depending on the return type). The following parameters can be passed to the STIX export tool: id, withAttachments, tags. Both id and tags can use the && (and) and ! (not) operators to build queries. Using the url parameters, the syntax is as follows:
+Search parameters can be passed to the function via URL parameters or by POSTing an xml or json object (depending on the return type). The following parameters can be passed to the STIX export tool: id, withAttachments, tags. Both id and tags can use the && (and) and ! (not) operators to build queries. Using the URL parameters, the syntax is as follows:
 
 ~~~~
 https://<misp url>/events/stix/download/[id]/[withAttachments]/[tags]/[from]/[to]/[last]
@@ -370,7 +381,7 @@ https://<misp url>/events/stix/download.json
 ~~~~
 
 ~~~~json
-{"request": {"id":["!51","!62"],"withAttachment":false,"tags":["APT1","!OSINT"],"from":false,"to":"2015-02-15"}}                                            
+{"request": {"id":["!51","!62"],"withAttachment":false,"tags":["APT1","!OSINT"],"from":false,"to":"2015-02-15"}}
 ~~~~
 
 If you use XML query objects:
@@ -412,13 +423,68 @@ The same search could be accomplished using the following POSTed XML object (not
 <request><id>!51</id><id>!62</id><tags>APT1</tags><tags>!OSINT</tags><from>2015-02-15</from></request>
 ~~~~
 
-## Tag management
 
+### POST /events/upload_sample/
+
+Upload malware samples
+
+~~~~
+https://<misp url>/events/upload_sample/[Event_id]
+~~~~
+
+This API will allow you to populate an event that you have modify rights to with malware samples (and all related hashes). Alternatively, if you do not supply an event ID, it will create a new event for you.
+
+The files have to be base64 encoded and POSTed as explained below. All samples will be zipped and password protected (with the password being "infected"). The hashes of the original file will be captured as additional attributes.
+
+The event ID is optional. MISP will accept either a JSON or an XML object posted to the above URL.
+
+The general structure of the expected objects is as follows:
+
+~~~~json
+{"request": {"files": [{"filename": filename1, "data": base64encodedfile1}, {"filename": filename2, "data": base64encodedfile2}],
+   "optional_parameter1", "optional_parameter2", "optional_parameter3"}}
+~~~~
+
+JSON:
+
+~~~~json
+{"request":{"files": [{"filename": "test1.txt", "data": "dGVzdA=="}, {"filename": "test2.txt", "data": "dGVzdDI="}], "distribution": 1, "info" : "test", "event_id": 15}}
+~~~~
+
+XML:
+
+~~~~xml
+<request><files><filename>test3.txt</filename><data>dGVzdA==</data></files><files><filename>test4.txt</filename><data>dGVzdDI=</data></files><info>test</info><distribution>1</distribution><event_id>15</event_id></request>
+~~~~
+
+The following optional parameters are expected:
+
+<dl>
+<dt>event_id</dt>
+<dd>The Event's ID is optional. It can be either supplied via the URL or the POSTed object, but the URL has priority if both are provided. Not supplying an event ID will cause MISP to create a single new event for all of the POSTed malware samples. You can define the default settings for the event, otherwise a set of default settings will be used.</dd>
+<dt>distribution</dt>
+<dd>The distribution setting used for the attributes and for the newly created event, if relevant. [0-3]</dd>
+<dt>to_ids</dt>
+<dd>You can flag all attributes created during the transaction to be marked as "to_ids" or not.</dd>
+<dt>category</dt>
+<dd>The category that will be assigned to the uploaded samples. Valid options are: Payload delivery, Artifacts dropped, Payload Installation, External Analysis.</dd>
+<dt>info</dt>
+<dd>Used to populate the event info field if no event ID supplied. Alternatively, if not set, MISP will simply generate a message showing that it's a malware sample collection generated on the given day.</dd>
+<dt>analysis</dt>
+<dd>The analysis level of the newly created event, if applicable. [0-2] threat_level_id: The threat level ID of the newly created event, if applicatble. [0-3]</dd>
+<dt>comment</dt>
+<dd>This will populate the comment field of any attribute created using this API.</dd>
+</dl>
+
+
+
+## Tag management /tags
 
 ### POST /tags/add
 
-#### Description
+TODO
 
+#### Description
 
 ### POST /tags/attachTagToObject
 
@@ -443,8 +509,14 @@ Attaches an Tag to an Object by a given UUID
 
 #### Example
 ~~~~
-curl --header "Authorization: a4PLf8QICdDdOmFjwdtSYqkCqn9CvN0VQt7mpUUf " --header "Accept: application/json" --header "Content-Type: application/json" -X POST http://10.50.13.60/tags/attachTagToObject/5a0d68b3-6da0-4ced-8233-77bb950d210f/tlp3Awhite
+curl --header "Authorization: YOUR API KEY " --header "Accept: application/json" --header "Content-Type: application/json" -X POST https://<misp url>/tags/attachTagToObject/5a0d68b3-6da0-4ced-8233-77bb950d210f/tlp3Awhite
 ~~~~
+
+
+~~~~
+curl --header "Authorization: YOUR API KEY " -d "{"uuid"="5a0d68b3-6da0-4ced-8233-77bb950d210f" "tag"="tlp:white"}" --header "Accept: application/json" --header "Content-Type: application/json" -X POST https://<misp url>/tags/attachTagToObject/
+~~~~
+
 
 ### POST /tags/removeTagFromObject
 
@@ -466,13 +538,10 @@ Removes an Tag to an Object by a given UUID
 }
 ~~~~
 
-
 #### Example
 ~~~~
-curl --header "Authorization: a4PLf8QICdDdOmFjwdtSYqkCqn9CvN0VQt7mpUUf " --header "Accept: application/json" --header "Content-Type: application/json" -X POST http://10.50.13.60/tags/removeTagFromObject/5a0d68b3-6da0-4ced-8233-77bb950d210f/tlp3Awhite
+curl --header "Authorization: YOUR API KEY " --header "Accept: application/json" --header "Content-Type: application/json" -X POST https://<misp url>/tags/removeTagFromObject/5a0d68b3-6da0-4ced-8233-77bb950d210f/tlp3Awhite
 ~~~~
-
-
 
 ### GET /tags/tagStatistics/
 
@@ -498,11 +567,25 @@ Will give an overview of the used attribute tags
 #### Example
 
 ~~~~
-curl --header "Authorization: a4PLf8QICdDdOmFjwdtSYqkCqn9CvN0VQt7mpUUf " --header "Accept: application/json" --header "Content-Type: application/json" -X GET http://10.50.13.60/tags/tagStatistics/
+curl --header "Authorization: YOUR API KEY " --header "Accept: application/json" --header "Content-Type: application/json" -X GET https://<misp url>/tags/tagStatistics/
 ~~~~
 
 ## Attribute management
 
+### POST /attributes/add/
+
+Adds an Attribute to an event
+
+#### URL Arguments
+
+- event id
+
+#### Output
+
+#### Example
+~~~~
+curl --header "Authorization: YOUR API KEY " --header "Accept: application/json" --header "Content-Type: application/json" -d "{"event_id":"3542","value":"1.2.3.4","category":"Network activity","type":"ip-dst"}" https://<misp url>/attributes/add/3542
+~~~~
 
 ### GET /attributes
 
@@ -521,7 +604,7 @@ Get an attribute
 
 #### Example
 ~~~~
-curl --header "Authorization: a4PLf8QICdDdOmFjwdtSYqkCqn9CvN0VQt7mpUUf " --header "Accept: application/json" --header "Content-Type: application/json" http://10.50.13.60/attributes/548847db-060c-4275-a0c7-15bb950d210b
+curl --header "Authorization: YOUR API KEY " --header "Accept: application/json" --header "Content-Type: application/json" https://<misp url>/attributes/548847db-060c-4275-a0c7-15bb950d210b
 ~~~~
 
 
@@ -550,7 +633,7 @@ curl --header "Authorization: YOUR API KEY" --header "Accept: application/json" 
 ~~~~
 
 ~~~~
-curl --header "Authorization: a4PLf8QICdDdOmFjwdtSYqkCqn9CvN0VQt7mpUUf " --header "Accept: application/json" --header "Content-Type: application/json" http://10.50.13.60/attributes/delete/548847db-060c-4275-a0c7-15bb950d210b
+curl --header "Authorization: YOUR API KEY " --header "Accept: application/json" --header "Content-Type: application/json" https://<misp url>/attributes/delete/548847db-060c-4275-a0c7-15bb950d210b
 ~~~~
 
 
@@ -590,7 +673,7 @@ Will give an overview of the used attribute types
 #### Example
 
 ~~~~
-curl --header "Authorization: a4PLf8QICdDdOmFjwdtSYqkCqn9CvN0VQt7mpUUf " --header "Accept: application/json" --header "Content-Type: application/json" -X GET http://10.50.13.60/attributes/attributeStatistics/
+curl --header "Authorization: YOUR API KEY " --header "Accept: application/json" --header "Content-Type: application/json" -X GET https://<misp url>/attributes/attributeStatistics/
 ~~~~
 
 ### GET /attributes/describeTypes Describe types API
@@ -619,7 +702,7 @@ Depending on the headers passed the returned data will be a JSON object or an XM
 #### Example
 
 ~~~~
-curl --header "Authorization: a4PLf8QICdDdOmFjwdtSYqkCqn9CvN0VQt7mpUUf " --header "Accept: application/json" --header "Content-Type: application/json" http://10.50.13.60/servers/getPyMISPVersion.json
+curl --header "Authorization: YOUR API KEY " --header "Accept: application/json" --header "Content-Type: application/json" https://<misp url>/servers/getPyMISPVersion.json
 ~~~~
 
 ### GET /servers/getVersion
@@ -632,7 +715,7 @@ curl --header "Authorization: a4PLf8QICdDdOmFjwdtSYqkCqn9CvN0VQt7mpUUf " --heade
 #### Example
 
 ~~~~
-curl --header "Authorization: a4PLf8QICdDdOmFjwdtSYqkCqn9CvN0VQt7mpUUf " --header "Accept: application/json" --header "Content-Type: application/json" http://10.50.13.60/servers/getPyMISPVersion.json
+curl --header "Authorization: YOUR API KEY " --header "Accept: application/json" --header "Content-Type: application/json" https://<misp url>/servers/getPyMISPVersion.json
 ~~~~
 
 
@@ -643,16 +726,13 @@ curl --header "Authorization: a4PLf8QICdDdOmFjwdtSYqkCqn9CvN0VQt7mpUUf " --heade
 - attribute_id
 - attribute_uuid
 
-
-## User management
+## User management /admin
 
 MISP allows administrators to create and manage users via its REST API
-
 
 ~~~~
 https://<misp url>/admin/users/view/[user id]
 ~~~~
-
 
 ### POST /admin/users/add
 
@@ -701,7 +781,7 @@ To view the mandatory and optional fields, use a GET request on the above URL.
 }
 ~~~~
 
-### POST admin/users/edit/
+### POST /admin/users/edit/
 
 To edit an existing user send a POST request to:
 
@@ -711,8 +791,7 @@ https://<misp url>/admin/users/edit/[user id]
 
 Only the fields POSTed will be updated, the rest is left intact. To view all possible parameters, simply send a GET request to the above URL.
 
-
-### POST admin/users/delete/
+### POST /admin/users/delete/
 
 You can also delete users by POSTing to the below URL, but keep in mind that disabling users (by setting the disabled flag via an edit) is always prefered to keep user associations to events intact.
 
@@ -726,7 +805,7 @@ You can also delete users by POSTing to the below URL, but keep in mind that dis
 https://<misp url>/admin/users/delete/[user id]
 ~~~~
 
-### GET admin/users
+### GET /admin/users
 
 #### Description
 
@@ -744,7 +823,7 @@ Will output all users
             "server_id": "0",
             "email": "admin@admin.test",
             "autoalert": false,
-            "authkey": "a4PLf8QICdDdOmFjwdtSYqkCqn9CvN0VQt7mpUUf",
+            "authkey": "YOUR API KEY",
             "invited_by": "0",
             "gpgkey": null,
             "certif_public": "",
@@ -778,11 +857,11 @@ Will output all users
 
 #### Example
 ~~~~
-curl --header "Authorization: a4PLf8QICdDdOmFjwdtSYqkCqn9CvN0VQt7mpUUf " --header "Accept: application/json" --header "Content-Type: application/json" -X GET http://10.50.13.60/admin/users
+curl --header "Authorization: YOUR API KEY " --header "Accept: application/json" --header "Content-Type: application/json" -X GET https://<misp url>/admin/users
 ~~~~
 
 
-### GET admin/users/view/
+### GET /admin/users/view/
 
 #### Description
 
@@ -804,7 +883,7 @@ Will return a single user. To view a user simply send a GET request.
         "server_id": "0",
         "email": "admin@admin.test",
         "autoalert": false,
-        "authkey": "a4PLf8QICdDdOmFjwdtSYqkCqn9CvN0VQt7mpUUf",
+        "authkey": "YOUR API KEY",
         "invited_by": "0",
         "gpgkey": null,
         "certif_public": "",
@@ -825,16 +904,16 @@ Will return a single user. To view a user simply send a GET request.
 ~~~~
 #### Example
 ~~~~
-curl --header "Authorization: a4PLf8QICdDdOmFjwdtSYqkCqn9CvN0VQt7mpUUf " --header "Accept: application/json" --header "Content-Type: application/json" -X GET http://10.50.13.60/admin/users/view/1
+curl --header "Authorization: YOUR API KEY " --header "Accept: application/json" --header "Content-Type: application/json" -X GET https://<misp url>/admin/users/view/1
 ~~~~
-
 
 ### POST admin/users/add/
 
-
-## Discussion API
+## Discussion API /threads
 
 If you would like to fetch a discussion thread including all of its posts, simply send a GET request to:
+
+### GET /threads/view/
 
 ~~~~
 https://<misp url>/threads/view/<thread id>
@@ -848,13 +927,15 @@ Content-type: application/json
 Accept: application/json
 ~~~~
 
+### GET /threads/viewEvent/
+
 To get all posts related to an event simply send a GET request to:
 
 ~~~~
 https://<misp url>/threads/viewEvent/<event id>
 ~~~~
 
-## Organisation management
+## Organisation management /organisations
 
 MISP allows administrators to create and manage organisations via its REST API
 
@@ -872,18 +953,34 @@ To fetch all organisations send a GET request to:
 https://<misp url>/organisations
 ~~~~
 
+### GET /organisations/view/
+
 To view an individual organisation, send a get request to:
 
 ~~~~
 https://<misp url>/organisations/view/id
 ~~~~
 
+### POST /admin/organisations/delete/
+
+TODO
+~~~
+https://<misp url>/admin/organisations/delete/[org id]
+~~~
+
+### POST /admin/organisations/edit/
+
+TODO
+~~~
+https://<misp url>/admin/organisations/edit/[org id]
+~~~
+
+### POST /admin/organisations/add
+
 The management of users happens via three apis:
 
 ~~~
 https://<misp url>/admin/organisations/add
-https://<misp url>/admin/organisations/edit/[org id]
-https://<misp url>/admin/organisations/delete/[org id]
 ~~~
 
 To delete an organisation simply send a POST or DELETE request to the above URL.
@@ -928,7 +1025,7 @@ To query the add or edit APIs for the valid parameters, simply send a GET reques
 ~~~
 {
     "name": "\/admin\/organisations\/add API description",
-    "description": "POST an Organisation object in JSON format to this API to create a new organsiation.",
+    "description": "POST an Organisation object in JSON format to this API to create a new organisation.",
     "mandatory_fields": [
         "name"
     ],
@@ -946,12 +1043,10 @@ To query the add or edit APIs for the valid parameters, simply send a GET reques
 }
 ~~~
 
-
-
 ## Special Cases
 
 
-### XML Export
+### XML Export /events/xml/download
 
 An automatic export of all events and attributes (except file attachments) is available under a custom XML format.
 
@@ -971,7 +1066,7 @@ You can post an XML or JSON object containing additional parameters in the JSON 
 parameters provide a way to filter the output to specific parameters.
 
 
-#### JSON query format
+#### JSON query format /events/xml/download.json
 
 The URL is appended with json:
 
@@ -1034,6 +1129,8 @@ https://<misp url>/events/xml/download/false/true/tag1&&tag2&&!tag3
 The keywords false or null should be used for optional empty parameters in the URL. Also check out the User Guide to read about the [REST API](../using-the-system/README.md#rest-api).
 
 ### CSV export
+
+#### GET /events/csv/download
 
 An automatic export of attributes is available as CSV. Only attributes that are flagged "to_ids" will get exported.
 
@@ -1127,7 +1224,7 @@ https://<misp-instance>/events/csv/download/<event-id>?attributes=timestamp,type
 
 The order of columns will be honoured including those related to object level information.
 
-To select object level columns, simply pre-pend the given object column’s name by object_, such as:
+To select object level columns, simply prepend the given object column's name by object_, such as:
 
 ~~~~
 https://<misp-instance>/events/csv/download/<event-id>?attributes=timestamp,type,uuid,value&object_attributes=uuid,name
@@ -1141,8 +1238,7 @@ timestamp,type,uuid,value,object_uuid,object_name
 
 includeContext option includes the tags for the event for each line.
 
-
-## RPZ export
+## RPZ export /attributes/rpz/download/
 
 You can export RPZ zone files for DNS level firewall by using the RPZ export functionality of MISP. The file generated will include all of the IDS
 flagged domain, hostname and IP-src/IP-dst attribute values that you have access to.
@@ -1152,7 +1248,7 @@ It is possible to further restrict the exported values using the following filte
 <dl>
 <dt>tags</dt>
 <dd>To include a tag in the results just write its names into this parameter. To exclude a tag prepend it with a '!'. You can also chain several tag
-   commands together with the '&&' operator. Please be aware the colons (:) cannot be used in the tag search when passed through the url. Use semicolons
+   commands together with the '&&' operator. Please be aware the colons (:) cannot be used in the tag search when passed through the URL. Use semicolons
    instead (the search will automatically search for colons instead).</dd>
 <dt>id</dt>
 <dd>The event's ID</dd>
@@ -1178,7 +1274,7 @@ MISP will inject header values into the zone file as well as define the action t
 |RPZ_ns_alt||
 |RPZ_email| root.localhost|
 
-To override the above values, either use the url parameters as described below:
+To override the above values, either use the URL parameters as described below:
 
 ~~~~
 https://<misp url>/attributes/rpz/download/[tags]/[eventId]/[from]/[to]/[policy]/[walled_garden]/[ns]/[ns_alt]/[email]/[serial]/[refresh]/[retry]/[expiry]/[minim
@@ -1195,7 +1291,7 @@ Or POST an XML or JSON object with the above listed options:
 {"request": {"tags": ["OSINT", "!OUTDATED"], "policy": "walled-garden", "walled_garden": "teamliquid.net", "refresh": "5h"}
 ~~~~
 
-## Text export
+## Text export /attributes/text/
 
 An export of all attributes of a specific type to a plain text file. By default only published and IDS flagged attributes are exported.
 
@@ -1300,8 +1396,8 @@ For example, to retrieve all attributes for event #5, including non IDS marked a
 ~~~~
 https://<misp url>/attributes/text/download/all/null/5/true
 ~~~~
-   
-## RESTful searches with JSON result
+
+## RESTful searches with JSON result /attributes/restSearch/
 
 It is possible to search the database for attributes based on a list of criteria
 
@@ -1311,7 +1407,9 @@ To return an event with all of its attributes, relations, shadowAttributes, use 
 https://<misp url>/attributes/restSearch/json/[value]/[type]/[category]/[org]/[tag]/[quickfilter]/[from]/[to]/[last]/[eventid]/[withAttachments]/[metadata]/[uuid]
 ~~~~
 
-   
+ If you include "includeEventUuid":1" in the json request, it will give you the event_uuid as a result as well.
+
+
 
 ## RESTful searches with XML result export
 
@@ -1442,7 +1540,7 @@ sigOnly is an optional flag that will block all attributes from being exported t
 https://<misp url>/attributes/returnAttributes/download/25/md5&&sha256&&!filename/true
 ~~~~
 
-## Filtering event metadata
+## Filtering event metadata /events/index
 
 As described in the REST section, it is possible to retrieve a list of events along with their metadata by sending a GET request to the /events API. However, this API in particular is a bit more versatile. You can pass search parameters along to search among the events on various fields and retrieve a list of matching events (along with their metadata). Use the following URL:
 
@@ -1509,7 +1607,7 @@ You can also download samples by knowing its MD5 hash. Simply pass the hash alon
 You can also use this API to get all samples from events that contain the passed hash. For this functionality, just pass the "allSamples" flag along.
 Note that if you are getting all samples from matching events, you can use all supported hash types (md5, sha1, sha256) for the lookup.
 
-You can also get all the samples from an event with a given event ID, by passing along the eventID parameter. Make sure that either an event ID or a hash is passed along, otherwise an error message will be returned. Also, if no hash is set, the allSamples flag will get set automatically.   
+You can also get all the samples from an event with a given event ID, by passing along the eventID parameter. Make sure that either an event ID or a hash is passed along, otherwise an error message will be returned. Also, if no hash is set, the allSamples flag will get set automatically.
 
 https://<misp url>/attributes/downloadSample/[hash]/[allSamples]/[eventID]
 
@@ -1534,56 +1632,6 @@ A description of all the parameters in the passed object:
 <dd>If set, it will return all samples from events that have a match for the hash provided above.</dd>
 <dt>eventID</dt>
 <dd>If set, it will only fetch data from the given event ID.</dd>
-</dl>
-
-## Upload malware samples using the "Upload Sample" API
-
-~~~~
-https://<misp url>/events/upload_sample/[Event_id]
-~~~~
-
-This API will allow you to populate an event that you have modify rights to with malware samples (and all related hashes). Alternatively, if you do not supply an event ID, it will create a new event for you.
-
-The files have to be base64 encoded and POSTed as explained below. All samples will be zipped and password protected (with the password being "infected"). The hashes of the original file will be captured as additional attributes.
-
-The event ID is optional. MISP will accept either a JSON or an XML object posted to the above URL.
-
-The general structure of the expected objects is as follows:
-
-~~~~json
-{"request": {"files": [{"filename": filename1, "data": base64encodedfile1}, {"filename": filename2, "data": base64encodedfile2}],
-   "optional_parameter1", "optional_parameter2", "optional_parameter3"}}
-~~~~
-
-JSON:
-
-~~~~json
-{"request":{"files": [{"filename": "test1.txt", "data": "dGVzdA=="}, {"filename": "test2.txt", "data": "dGVzdDI="}], "distribution": 1, "info" : "test", "event_id": 15}}
-~~~~
-
-XML:
-
-~~~~xml
-<request><files><filename>test3.txt</filename><data>dGVzdA==</data></files><files><filename>test4.txt</filename><data>dGVzdDI=</data></files><info>test</info><distribution>1</distribution><event_id>15</event_id></request>
-~~~~
-
-The following optional parameters are expected:
-
-<dl>
-<dt>event_id</dt>
-<dd>The Event's ID is optional. It can be either supplied via the URL or the POSTed object, but the URL has priority if both are provided. Not supplying an event ID will cause MISP to create a single new event for all of the POSTed malware samples. You can define the default settings for the event, otherwise a set of default settings will be used.</dd>
-<dt>distribution</dt>
-<dd>The distribution setting used for the attributes and for the newly created event, if relevant. [0-3]</dd>
-<dt>to_ids</dt>
-<dd>You can flag all attributes created during the transaction to be marked as "to_ids" or not.</dd>
-<dt>category</dt>
-<dd>The category that will be assigned to the uploaded samples. Valid options are: Payload delivery, Artifacts dropped, Payload Installation, External Analysis.</dd>
-<dt>info</dt>
-<dd>Used to populate the event info field if no event ID supplied. Alternatively, if not set, MISP will simply generate a message showing that it's a malware sample collection generated on the given day.</dd>
-<dt>analysis</dt>
-<dd>The analysis level of the newly created event, if applicable. [0-2] threat_level_id: The threat level ID of the newly created event, if applicatble. [0-3]</dd>
-<dt>comment</dt>
-<dd>This will populate the comment field of any attribute created using this API.</dd>
 </dl>
 
 
@@ -1615,7 +1663,7 @@ XML:
 
 None of the above fields are mandatory, but at least one of them has to be provided.
 
-## Sharing groups
+## Sharing groups /sharing_groups
 
 MISP allows sharing groups to be retrieved via the API.
 
@@ -1625,21 +1673,29 @@ https://<misp url>/sharing_groups/index.json
 
 Based on the API key used, the list of visible sharing groups will be returned in a JSON file. The JSON includes the organization parts of a given sharing group along with the associated server.
 
-## Enable, disable and fetching feeds via the API
+## Feed management /feeds
+
+Enable, disable and fetching feeds via the API
 
 The MISP feeds can be enabled via the API.
 
-A feed can be enabled by POSTing on the following url (feed_id is the id of the feed):
+### POST /feeds/enable/
+
+A feed can be enabled by POSTing on the following URL (feed_id is the id of the feed):
 
 ~~~~
 /feeds/enable/feed_id
 ~~~~
 
-A feed can be disabled by POSTing on the following url (feed_id is the id of the feed):
+### POST /feeds/disable/
+
+A feed can be disabled by POSTing on the following URL (feed_id is the id of the feed):
 
 ~~~~
 /feeds/disable/feed_id
 ~~~~
+
+### GET /feeds/cacheFeeds/all
 
 All feeds can fetch via the API:
 
@@ -1652,8 +1708,9 @@ with the `id` value of the feed to fetch a specific feed.
 
 This API can be also used to download feeds at regular interval via cronjobs or alike.
 
+## Sightings API /sightings
 
-## Sightings API
+### POST /sightings/add
 
 MISP allows Sightings data to be conveyed in several ways.
 
@@ -1699,7 +1756,7 @@ It is also possible to POST a STIX indicator with sighting data to the following
 https://<misp url>/sightings/add/stix
 ~~~~
 
-MISP will use the sighting's related observables to gather all values and create sightings for each attribute that matches any of the values. If no related observables are provided in the Sighting object, then MISP will fall back to the Indicator itself and use its observables' values to create the sightings. The time of the sighting is the current time, unless the timestamp attribute is set on the Sightings object, in which case that is taken.
+MISP will use the sightings related observables to gather all values and create sightings for each attribute that matches any of the values. If no related observables are provided in the Sighting object, then MISP will fall back to the Indicator itself and use its observables' values to create the sightings. The time of the sighting is the current time, unless the timestamp attribute is set on the Sightings object, in which case that is taken.
 
 An example STIX sightings document:
 
@@ -1826,18 +1883,17 @@ MISP would create sightings for attributes matching any of the following: malici
 
 ## Warninglists API
 
-
-### GET warninglists/index
+### GET /warninglists/index
 
 #### Description
 
 Return the index of warninglists enabled on the MISP instance
+
 #### Parameters
 
 - id
 
 #### Output
-
 
 ~~~~json
 ...
@@ -1846,12 +1902,14 @@ Return the index of warninglists enabled on the MISP instance
 
 
 ~~~~
+
 #### Example
+
 ~~~~
-curl  --header "Authorization: a4PLf8QICdDdOmFjwdtSYqkCqn9CvN0VQt7mpUUf " --header "Accept: application/json" --header "Content-Type: application/json" -X "GET" https://10.50.13.60/warninglists/index
+curl  --header "Authorization: YOUR API KEY " --header "Accept: application/json" --header "Content-Type: application/json" -X "GET" https://10.50.13.60/warninglists/index
 ~~~~
 
-### GET warninglists/view/1
+### GET /warninglists/view/1
 
 #### Description
 
@@ -1863,18 +1921,17 @@ Return the a warninglist by id
 
 #### Output
 
-
 ~~~~json
 to long
 ~~~~
+
 #### Example
+
 ~~~~
-curl  --header "Authorization: a4PLf8QICdDdOmFjwdtSYqkCqn9CvN0VQt7mpUUf " --header "Accept: application/json" --header "Content-Type: application/json" -X "GET" https://10.50.13.60/warninglists/view/17
+curl  --header "Authorization: YOUR API KEY " --header "Accept: application/json" --header "Content-Type: application/json" -X "GET" https://10.50.13.60/warninglists/view/17
 ~~~~
 
-
-
-# Attribute statistics API
+## Attribute statistics API /attributes/attributeStatistics/
 
 If you are interested in the attribute type or attribute category data distribution on your instance, MISP offers an API that will create an aggregates list. To access the API, simple sent a GET request to:
 
@@ -1945,7 +2002,7 @@ Sample output of the types in percentages from CIRCL's MISP instance:
 }
 ~~~~
 
-# Additional statistics
+## Additional statistics
 
 Additional statistics are available as JSON which are the statistics also usable via the user interface. A ".json" can be appended
 to the following URLs:
@@ -1978,6 +2035,129 @@ An example output of https://<misp url>/users/statistics.json:
 }
 ~~~~
 
+# MISP modules /modules
 
+## Description
 
+It is possible call misp-modules directly from API.
+If the module needs credentials, API will get the information directly from MISP configuration.
+
+### GET /modules/
+
+Retrieve a list of all modules enabled.
+
+#### Example
+
+~~~bash
+curl --header "Authorization: YOUR API KEY " --header "Accept: application/json" --header "Content-Type: application/json" -X GET http://<MISP>/modules/
+~~~
+
+#### Output
+
+~~~json
+[
+  {
+    "name": "passivetotal",
+    "type": "expansion",
+    "mispattributes": {
+      "input": [
+        "hostname",
+        "domain",
+        "ip-src",
+        "ip-dst"
+      ],
+      "output": [
+        "ip-src",
+        "ip-dst",
+        "hostname",
+        "domain"
+      ]
+    },
+    "meta": {
+      "description": "PassiveTotal expansion service to expand values with multiple Passive DNS sources",
+      "config": [
+        "username",
+        "password"
+      ],
+      "author": "Alexandre Dulaunoy",
+      "version": "0.1"
+    }
+  },
+  {
+    "name": "sourcecache",
+    "type": "expansion",
+    "mispattributes": {
+      "input": [
+        "link"
+      ],
+      "output": [
+        "link"
+      ]
+    },
+    "meta": {
+      "description": "Module to cache web pages of analysis reports, OSINT sources. The module returns a link of the cached page.",
+      "author": "Alexandre Dulaunoy",
+      "version": "0.1"
+    }
+  },
+  {
+    "name": "dns",
+    "type": "expansion",
+    "mispattributes": {
+      "input": [
+        "hostname",
+        "domain"
+      ],
+      "output": [
+        "ip-src",
+        "ip-dst"
+      ]
+    },
+    "meta": {
+      "description": "Simple DNS expansion service to resolve IP address from MISP attributes",
+      "author": "Alexandre Dulaunoy",
+      "version": "0.1"
+    }
+  }
+]
+~~~
+
+### POST /modules/queryEnrichment
+
+Call any enabled module.
+
+#### Example
+
+Content of dns.json
+
+~~~json
+{
+  "hostname": "www.foo.be",
+  "module": "dns"
+}
+~~~
+
+Query using MISP API
+
+~~~bash
+curl --header "Authorization: YOUR API KEY " --header "Accept: application/json" --header "Content-Type: application/json" --data @dns.json -X POST http://<MISP>/modules/queryEnrichment
+~~~
+
+The output will be following JSON:
+
+~~~json
+{
+  "results": [
+    {
+      "types": [
+        "ip-src",
+        "ip-dst"
+      ],
+      "values": [
+        "188.65.217.78"
+      ]
+    }
+  ]
+}
+~~~
 
