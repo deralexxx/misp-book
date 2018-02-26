@@ -168,6 +168,27 @@ Return the event index. - Warning, there's a limit on the number of results
 curl --header "Authorization: YOUR API KEY " --header "Accept: application/json" --header "Content-Type: application/json" https://<misp url>/events/index
 ~~~~
 
+#### GET /events/index/searchtimestamp: Limit results by searchtimestamp
+
+By providing /events/index/searchtimestamp:my_timestamp it will return a eventlist with a limited timerange
+
+Or provide the following JSON object:
+
+~~~~json
+{"searchtimestamp":your_timestamp_threshold}
+~~~~
+
+Also possible:
+
+~~~~
+searchdatefrom (YYYY-MM-DD - using the date field)
+searchdateto (YYYY-MM-DD - using the date field)
+searchtimestamp (timestamp - using the event timestamp)
+searchpublishtimestamp (timestamp - using the event timestamp)
+~~~~
+
+There is the publish timestamp, which is a unix timestamp representing when the event was last published and there is also the timestamp field which is simply the timestamp the event was last edited at.
+
 ### POST /events/addTag Add tag from event
 
 You can add or remove an existing tag from an event in the following way:
