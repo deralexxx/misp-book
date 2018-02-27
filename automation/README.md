@@ -668,7 +668,6 @@ Get an attribute
 curl --header "Authorization: YOUR API KEY " --header "Accept: application/json" --header "Content-Type: application/json" https://<misp url>/attributes/548847db-060c-4275-a0c7-15bb950d210b
 ~~~~
 
-
 ### GET /attributes/delete/
 
 #### Description
@@ -684,9 +683,11 @@ Delete attributes.
 - attribute id/1 <-- hard delete
 
 #### Output
+
 ~~~~json
 {"message":"Attribute deleted."}
 ~~~~
+
 #### Example
 
 ~~~~
@@ -748,11 +749,11 @@ https://<misp url>/attributes/describeTypes
 
 Depending on the headers passed the returned data will be a JSON object or an XML, with 3 main sections: types, categories, category\_type\_mappings.
 
-
-
 ## Server management
 
 ### GET /servers/getPyMISPVersion
+
+Will return the pyMISP version.
 
 #### Result
 
@@ -779,13 +780,29 @@ curl --header "Authorization: YOUR API KEY " --header "Accept: application/json"
 curl --header "Authorization: YOUR API KEY " --header "Accept: application/json" --header "Content-Type: application/json" https://<misp url>/servers/getPyMISPVersion.json
 ~~~~
 
-
 ## Sightings
 
 ### POST /sightings/add/
-
-- attribute_id
-- attribute_uuid
+~~~~json
+{
+    "name": "\/sightings\/add API description",
+    "description": "POST a simplified sighting object in JSON format to this API to add a or a list of sightings. Pass either value(s) or attribute IDs (can be uuids) to identify the target sightings.",
+    "mandatory_fields": {
+        "OR": [
+            "values",
+            "id"
+        ]
+    },
+    "optional_fields": [
+        "type",
+        "source",
+        "timestamp",
+        "date",
+        "time"
+    ],
+    "url": "\/sightings\/add"
+}
+~~~~
 
 ## User management /admin
 
@@ -797,7 +814,35 @@ https://<misp url>/admin/users/view/[user id]
 
 ### POST /admin/users/add
 
-To create a new user, send a POST request to:
+To create a new user, send a POST request.
+~~~~json
+{
+    "name": "\/admin\/users\/add API description",
+    "description": "POST a User object in JSON format to this API to create a new user.",
+    "mandatory_fields": [
+        "email",
+        "org_id",
+        "role_id"
+    ],
+    "optional_fields": [
+        "password",
+        "external_auth_required",
+        "external_auth_key",
+        "enable_password",
+        "nids_sid",
+        "server_id",
+        "gpgkey",
+        "certif_public",
+        "autoalert",
+        "contactalert",
+        "disabled",
+        "change_pw",
+        "termsaccepted",
+        "newsread"
+    ],
+    "url": "\/admin\/users\/add"
+}
+~~~~
 
 ####Sample input:
 
@@ -967,8 +1012,6 @@ Will return a single user. To view a user simply send a GET request.
 ~~~~
 curl --header "Authorization: YOUR API KEY " --header "Accept: application/json" --header "Content-Type: application/json" -X GET https://<misp url>/admin/users/view/1
 ~~~~
-
-### POST admin/users/add/
 
 ## Discussion API /threads
 
