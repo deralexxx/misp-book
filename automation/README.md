@@ -95,6 +95,7 @@ Receive events based on criteria
 
 - event_id: Event id to receive
 - event_uuid : Event uuid to receive
+- there are many more arguments TODO
 
 
 #### Output
@@ -114,7 +115,25 @@ Will post an event to MISP.
 
 #### Arguments
 
-TODO
+- id
+- orgc_id 
+- org_id 
+- date 
+- threat_level_id 
+- info 
+- published BOOLEAN
+- uuid 
+- attribute_count
+- analysis
+- timestamp 
+- distribution
+- proposal_email_lock 
+- locked
+- publish_timestamp
+- sharing_group_id
+- Galaxy [],
+- Orgc []
+- Attribute []
 
 #### Example
 
@@ -503,15 +522,28 @@ The following optional parameters are expected:
 
 ### POST /tags/add
 
-TODO
+Paramters:
+~~~~json
+Tag": {
+        "id": "1",
+        "name": "Type:OSINT",
+        "colour": "#1eed40",
+        "exportable": true,
+        "org_id": "0",
+        "hide_tag": false,
+        "user_id": "0"
+    }
+~~~~
 
 #### Description
+
+Will add a Tag to the System
 
 ### POST /tags/attachTagToObject
 
 #### Description
 
-Attaches an Tag to an Object by a given UUID
+Attaches an Tag to an either be an event or attribute by a given UUID
 
 #### URL Arguments
 
@@ -600,6 +632,14 @@ Adds an Attribute to an event
 #### URL Arguments
 
 - event id
+
+#### Parameters
+
+(not limited to)
+
+- value
+- category
+- type
 
 #### Output
 
